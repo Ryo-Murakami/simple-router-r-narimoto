@@ -20,22 +20,21 @@
 <a id="printRT"></a>
 ##1.ルーティングテーブルの表示  
 下記のようにメソッドを追加した．  
-* [./lib/simple_router.rb](https://github.com/handai-trema/simple-router-r-narimoto/blob/master/lib/simple_router.rb)  
 
 ###print_routing_tableメソッド  
 RoutingTableクラスに実装したgetDBメソッドの戻り値をそのまま返す．  
 ```ruby
+#./lib/simple_router.rb
 def print_routing_table()
     return @routing_table.getDB()
 end
 ```  
 
-* [./lib/routing_table.rb](https://github.com/handai-trema/simple-router-r-narimoto/blob/master/lib/routing_table.rb)  
-
 ###getDBメソッド  
 RoutingTableクラス内で保持している@db変数の中身を，すべてipアドレスを示す文字列へと変換した状態のハッシュの配列として生成しなおして返している．  
 @db変数そのままの状態では，ハッシュのキーとなる宛先ipのプレフィックスが整数型に変換されてしまっている為，IPv4Addressクラスを利用して可読性の高い文字列へと変換するようにしている．
 ```ruby
+#./lib/routing_table.rb
 def getDB()
   ret = Array.new()
   @db.each do |each|
@@ -56,8 +55,8 @@ end
 ./bin/simple_router printRT
 ```  
 実装は以下の通り．  
-* [./bin/simple_router](https://github.com/handai-trema/simple-router-r-narimoto/blob/master/bin/simple_router)  
 ```ruby
+#./bin/simple_router
 desc 'Print routing table'
 arg_name '@routing_table'
 command :printRT do |c|
@@ -79,9 +78,9 @@ end
 ```  
 
 ###動作確認  
-起動時の初期状態のルーティングテーブルは以下の通り．
-* [./simple_router.conf](https://github.com/handai-trema/simple-router-r-narimoto/blob/master/simple_router.conf)  
+起動時の初期状態のルーティングテーブルは以下の通り．  
 ```
+#./simple_router.conf
 ROUTES = [
   {
     destination: '0.0.0.0',
@@ -103,12 +102,12 @@ $
 <a id="addRT"></a>
 ##2.ルーティングテーブルエントリの追加と削除    
 下記のようにメソッドを追加した．  
-* [./lib/simple_router.rb](https://github.com/handai-trema/simple-router-r-narimoto/blob/master/lib/simple_router.rb)  
 
 ###add_routing_table_entryメソッド  
 RoutingTableクラスに実装されているaddメソッドを利用する．  
 渡す引数だけ，コードを確認して合うように用意している．
 ```ruby
+#./lib/simple_router.rb
 def add_routing_table_entry(destination_ip, netmask_length, next_hop)
     options = {:destination => destination_ip, :netmask_length => netmask_length, :next_hop => next_hop}
     @routing_table.add(options)
@@ -118,18 +117,18 @@ end
 RoutingTableクラスにdeleteメソッドを実装し，追加と同様に利用している．  
 渡す引数のフォーマットを追加と同様にしている．
 ```ruby
+#./lib/simple_router.rb
 def delete_routing_table_entry(destination_ip, netmask_length)
   options = {:destination => destination_ip, :netmask_length => netmask_length}
   @routing_table.delete(options)
 end
 ```  
 
-* [./lib/routing_table.rb](https://github.com/handai-trema/simple-router-r-narimoto/blob/master/lib/routing_table.rb)  
-
 ###deleteメソッド  
 既に実装されていたaddメソッドを参考に，optionsに含まれる情報を元に，
 配列から削除するメソッドを下記の通り実装した．
 ```ruby
+#./lib/routing_table.rb
 def delete(options)
   netmask_length = options.fetch(:netmask_length)
   prefix = IPv4Address.new(options.fetch(:destination)).mask(netmask_length)
@@ -146,8 +145,8 @@ end
 ./bin/simple_router delRT [destination ip] [netmask length]
 ```  
 実装は以下の通り．  
-* [./bin/simple_router](https://github.com/handai-trema/simple-router-r-narimoto/blob/master/bin/simple_router)  
 ```ruby
+#./bin/simple_router
 desc 'Add routing table entry'
 arg_name 'destination_ip netmask_length next_hop'
 command :addRT do |c|
@@ -233,11 +232,11 @@ $
 <a id="printInterface"></a>
 ##3.ルータのインターフェース一覧の表示  
 下記のようにメソッドを追加した．  
-* [./lib/simple_router.rb](https://github.com/handai-trema/simple-router-r-narimoto/blob/master/lib/simple_router.rb)  
 
 ###print_interfaceメソッド  
 保持しているインターフェースを表示する際に扱いやすいように文字列や数値のみで表されるハッシュにし，それをインターフェースごとの要素として配列に格納して返すように実装している．  
 ```ruby
+#./lib/simple_router.rb
 def print_interface()
   ret = Array.new()
   Interface.all.each do |each|
@@ -253,8 +252,8 @@ end
 ./bin/simple_router printInterface
 ```  
 実装は以下の通り．  
-* [./bin/simple_router](https://github.com/handai-trema/simple-router-r-narimoto/blob/master/bin/simple_router)  
 ```ruby
+#./bin/simple_router
 desc 'Print interface'
 arg_name 'interfaces'
 command :printInterface do |c|
@@ -272,9 +271,9 @@ end
 ```  
 
 ###動作確認  
-起動時の初期状態におけるインターフェースは以下の通り．
-* [./simple_router.conf](https://github.com/handai-trema/simple-router-r-narimoto/blob/master/simple_router.conf)  
+起動時の初期状態におけるインターフェースは以下の通り．  
 ```
+#./simple_router.conf
 INTERFACES = [
   {
     port: 1,
@@ -299,3 +298,8 @@ $ bin/simple_router printInterface
 $
 ```  
 結果より，正しくインターフェースが表示されていることがわかる．  
+
+##ソースコード
+* [./lib/simple_router.rb](https://github.com/handai-trema/simple-router-r-narimoto/blob/master/lib/simple_router.rb)  
+* [./lib/routing_table.conf](https://github.com/handai-trema/simple-router-r-narimoto/blob/master/lib/routing_table.rb)  
+* [./bin/simple_router](https://github.com/handai-trema/simple-router-r-narimoto/blob/master/bin/simple_router)  
