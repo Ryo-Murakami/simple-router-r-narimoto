@@ -28,7 +28,7 @@ class Interface
   end
 
   def self.get()
-    return interface
+    return all
   end
 
   include Pio
