@@ -90,7 +90,7 @@ class SimpleRouter < Trema::Controller
   # rubocop:enable MethodLength
 
   def print_routing_table()
-      return @routing_table
+      return @routing_table.getDB()
   end
 
   def add_routing_table_entry(destination_ip, netmask_length, next_hop)
