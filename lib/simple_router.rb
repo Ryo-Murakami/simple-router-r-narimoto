@@ -104,7 +104,7 @@ class SimpleRouter < Trema::Controller
   end
 
   def print_interface()
-    return Interface.all
+    return Interface.interface
   end
 
   private
