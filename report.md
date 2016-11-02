@@ -49,7 +49,8 @@ def getDB()
 end
 ```  
 
-また，新たにbinフォルダ内にコマンド実行用のバイナリsimple_routerを作成した．  
+###printRTコマンド  
+新たにbinフォルダ内にコマンド実行用のバイナリsimple_routerを作成した．  
 ルーティングテーブルを表示するときのコマンドは以下の通り．
 ```
 ./bin/simple_router printRT
@@ -136,7 +137,8 @@ def delete(options)
 end
 ```  
 
-また，./bin/simple_routerにaddRTとdelRTコマンドを実装し，下記のように使えるようにした．  
+###addRT/delRTコマンド  
+./bin/simple_routerにaddRTとdelRTコマンドを実装し，下記のように使えるようにした．  
 ```
 (追加)
 ./bin/simple_router addRT [destination ip] [netmask length] [next hop]
@@ -245,6 +247,7 @@ def print_interface()
 end
 ```  
 
+###printInterfaceコマンド  
 ./bin/simple_routerにprintInterfaceコマンドを実装し，下記のように使えるようにした．  
 ```
 ./bin/simple_router printInterface
