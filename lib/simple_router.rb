@@ -7,7 +7,7 @@ require 'routing_table'
 class SimpleRouter < Trema::Controller
   def start(_args)
     load File.join(__dir__, '..', 'simple_router.conf')
-    Interface.load_configuration Configuration::INTERFACES
+    @interfaces = Interface.load_configuration Configuration::INTERFACES
     @arp_table = ArpTable.new
     @routing_table = RoutingTable.new(Configuration::ROUTES)
     @unresolved_packet_queue = Hash.new { [] }
@@ -104,7 +104,7 @@ class SimpleRouter < Trema::Controller
   end
 
   def print_interface()
-    return Interface.each
+    return @interfaces
   end
 
   private
