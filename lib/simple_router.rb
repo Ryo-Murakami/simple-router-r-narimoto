@@ -104,7 +104,11 @@ class SimpleRouter < Trema::Controller
   end
 
   def print_interface()
-    return @interfaces
+    ret = Array.new()
+    Interface.all.each do |each|
+      ret << {:port_number => each.port_number, :mac_address => each.mac_address.to_s, :ip_address => each.ip_address.value.to_s, :netmask_length => each.netmask_length}
+    end
+    return ret
   end
 
   private

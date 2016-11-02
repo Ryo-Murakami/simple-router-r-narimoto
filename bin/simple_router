@@ -19,13 +19,19 @@ module SimpleRouterApp
     c.action do |_global_options, options, args|
       @routing_table = Trema.trema_process('SimpleRouter', options[:socket_dir]).controller.
         print_routing_table()
-      p @routing_table
+      print "\"destination/netmask\" \"next hop\"\n"
+      @routing_table.each do |each|
+        mask = @routing_table.find_index each
+        each.each do |key, value|
+          print sprintf("%-21s %s\n", key+"/"+mask.to_s, value)
+        end
+      end
     end
   end
 
   desc 'Add routing table entry'
   arg_name 'destination_ip netmask_length next_hop'
-  command :AddRT do |c|
+  command :addRT do |c|
     c.desc 'Location to find socket files'
     c.flag [:S, :socket_dir], default_value: Trema::DEFAULT_SOCKET_DIR
 
@@ -34,13 +40,13 @@ module SimpleRouterApp
       netmask_length = args[1].to_i
       next_hop = args[2]
       Trema.trema_process('SimpleRouter', options[:socket_dir]).controller.
-        add_routing_table_entry(destination_ip, netmask_length, port2)
+        add_routing_table_entry(destination_ip, netmask_length, next_hop)
     end
   end
 
   desc 'Delete routing table entry'
   arg_name 'destination_ip netmask_length'
-  command :DelRT do |c|
+  command :delRT do |c|
     c.desc 'Location to find socket files'
     c.flag [:S, :socket_dir], default_value: Trema::DEFAULT_SOCKET_DIR
 
@@ -54,15 +60,17 @@ module SimpleRouterApp
   end
 
   desc 'Print interface'
-  arg_name '@interfaces'
+  arg_name 'interfaces'
   command :printInterface do |c|
     c.desc 'Location to find socket files'
     c.flag [:S, :socket_dir], default_value: Trema::DEFAULT_SOCKET_DIR
 
     c.action do |_global_options, options, args|
-      @interfaces = Trema.trema_process('SimpleRouter', options[:socket_dir]).controller.
-        print_interface()
-      p @interfaces
+      interfaces = Trema.trema_process('SimpleRouter', options[:socket_dir]).controller.print_interface()
+      print sprintf("%s %-17s %s", "\"port number\"", "\"mac address\"", "\"ip address/netmask\"\n")
+      interfaces.each do |each|
+        print sprintf("%-13s %-17s %s\n", each[:port_number].to_s, each[:mac_address], each[:ip_address]+"/"+each[:netmask_length].to_s)
+      end
     end
   end
 

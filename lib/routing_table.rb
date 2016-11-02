@@ -22,7 +22,15 @@ class RoutingTable
   end
 
   def getDB()
-    return @db
+    ret = Array.new()
+    @db.each do |each|
+      tmp = Hash.new()
+      each.each do |key, value|
+        tmp[IPv4Address.new(key).to_s] = value.to_s
+      end
+      ret << tmp
+    end
+    return ret
   end
 
   def lookup(destination_ip_address)
