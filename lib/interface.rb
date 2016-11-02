@@ -27,6 +27,10 @@ class Interface
     all.each(&block)
   end
 
+  def self.get()
+    return interface
+  end
+
   include Pio
 
   attr_reader :mac_address
