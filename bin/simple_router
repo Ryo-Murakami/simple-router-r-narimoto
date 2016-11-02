@@ -19,7 +19,7 @@ module SimpleRouterApp
     c.action do |_global_options, options, args|
       @routing_table = Trema.trema_process('SimpleRouter', options[:socket_dir]).controller.
         print_routing_table()
-      p @routing_table.db
+      p @routing_table
     end
   end
 
