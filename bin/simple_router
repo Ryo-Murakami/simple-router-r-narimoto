@@ -62,7 +62,9 @@ module SimpleRouterApp
     c.action do |_global_options, options, args|
       interface = Trema.trema_process('SimpleRouter', options[:socket_dir]).controller.
         print_interface()
-      p interface
+      interface.find do |each|
+        p each
+      end
     end
   end
 
