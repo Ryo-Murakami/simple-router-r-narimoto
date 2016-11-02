@@ -54,17 +54,15 @@ module SimpleRouterApp
   end
 
   desc 'Print interface'
-  arg_name 'interface'
+  arg_name '@interfaces'
   command :printInterface do |c|
     c.desc 'Location to find socket files'
     c.flag [:S, :socket_dir], default_value: Trema::DEFAULT_SOCKET_DIR
 
     c.action do |_global_options, options, args|
-      interface = Trema.trema_process('SimpleRouter', options[:socket_dir]).controller.
+      @interfaces = Trema.trema_process('SimpleRouter', options[:socket_dir]).controller.
         print_interface()
-      interface.find do |each|
-        p each
-      end
+      p @interfaces
     end
   end
 
